@@ -371,6 +371,8 @@ The plugin also provides `:Jdiff`, `:Jvdiff`, and `:Jhdiff` commands for diffing
         -- "buffer" - Opens a Git-style commit message buffer with syntax highlighting (default)
         -- "input" - Uses a simple vim.ui.input prompt
         type = "buffer",
+        -- Use gitcommit filetype instead of jjdescription for describe/commit editor buffers
+        use_gitcommit_filetype = false,
         -- Customize keymaps for the describe editor buffer
         keymaps = {
           close = { "<C-c>" }, -- Keys to close editor without saving

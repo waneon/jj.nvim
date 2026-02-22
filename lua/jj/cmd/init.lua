@@ -20,6 +20,7 @@ local split_module = require("jj.cmd.split")
 
 --- @class jj.cmd.describe.editor
 --- @field type? "buffer"|"input" Editor mode for describe command: "buffer" (Git-style editor) or "input" (simple input prompt)
+--- @field use_gitcommit_filetype? boolean Use `gitcommit` filetype for describe/commit editor buffers (default: false)
 --- @field keymaps? jj.cmd.describe.editor.keymaps Keymaps for the describe editor only when on "buffer" mode.
 
 --- @class jj.cmd.describe
@@ -133,6 +134,7 @@ M.config = {
 	describe = {
 		editor = {
 			type = "buffer",
+			use_gitcommit_filetype = false,
 			keymaps = {
 				close = { "<C-c>" },
 				save = { "q" },
@@ -208,6 +210,9 @@ M.config = {
 --- @param opts jj.cmd.opts: Options to configure the cmd module
 function M.setup(opts)
 	M.config = vim.tbl_deep_extend("force", M.config, opts or {})
+	editor.setup({
+		use_gitcommit_filetype = M.config.describe.editor.use_gitcommit_filetype,
+	})
 
 	require("jj.cmd.log").init_log_highlights()
 end

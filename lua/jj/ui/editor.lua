@@ -14,6 +14,7 @@ M.highlights = {
 	renamed = { fg = "#d29922", ctermfg = "Yellow" },
 }
 M.highlights_initialized = false
+M.use_gitcommit_filetype = false
 
 -- Initialize highlight groups once
 local function init_highlights()
@@ -43,7 +44,7 @@ local function init_highlights()
 end
 
 --- Setup function to configure highlights and other options
----@param opts? { highlights: jj.ui.editor.highlights } Configuration options
+---@param opts? { highlights?: jj.ui.editor.highlights, use_gitcommit_filetype?: boolean } Configuration options
 function M.setup(opts)
 	opts = opts or {}
 
@@ -56,6 +57,10 @@ function M.setup(opts)
 	if M.highlights_initialized then
 		M.highlights_initialized = false
 		init_highlights()
+	end
+
+	if type(opts.use_gitcommit_filetype) == "boolean" then
+		M.use_gitcommit_filetype = opts.use_gitcommit_filetype
 	end
 end
 
@@ -106,11 +111,12 @@ function M.open_editor(initial_text, on_write, on_unload, keymaps)
 	end
 
 	-- Create buffer
+	local filetype = M.use_gitcommit_filetype and "gitcommit" or "jjdescription"
 	local buf = buffer.create({
 		name = "jujutsu:///DESCRIBE_EDITMSG",
 		split = "horizontal",
 		size = math.floor(vim.o.lines / 2),
-		filetype = "jjdescription",
+		filetype = filetype,
 		buftype = "acwrite",
 		modifiable = true,
 		keymaps = keymaps,
