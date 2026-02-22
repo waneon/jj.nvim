@@ -53,6 +53,10 @@ local function describe_editor_keymaps()
 			desc = "Close describe editor without saving",
 			handler = "<cmd>close!<CR>",
 		},
+		save = {
+			desc = "Write and close describe editor",
+			handler = "<cmd>wq<CR>",
+		},
 	})
 end
 

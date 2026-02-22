@@ -373,7 +373,8 @@ The plugin also provides `:Jdiff`, `:Jvdiff`, and `:Jhdiff` commands for diffing
         type = "buffer",
         -- Customize keymaps for the describe editor buffer
         keymaps = {
-          close = { "<C-c>", "q" },  -- Keys to close editor without saving
+          close = { "<C-c>" }, -- Keys to close editor without saving
+          save = { "q" },               -- Keys to write and close editor
         }
       }
     },
@@ -460,7 +461,7 @@ The `describe.editor.type` option lets you choose how you want to write commit d
 - **`"buffer"`** (default) - Opens a full buffer editor similar to Git's commit message editor
   - Shows file changes with syntax highlighting
   - Multi-line editing with proper formatting
-  - Close with `q` or `<Esc>`, save with `:w` or `:wq`
+  - Close with `<C-c>`, save with `q` or `:wq`
 - **`"input"`** - Simple single-line input prompt
   - Quick and minimal
   - Good for short, single-line descriptions
@@ -486,7 +487,8 @@ require("jj").setup({
     editor = {
       type = "buffer",
       keymaps = {
-        close = { "q", "<Esc>", "<C-c>" }, -- Customize close keybindings
+        close = { "<C-c>" }, -- Close without saving
+        save = { "q" },               -- Write and close
       }
     }
   }
@@ -781,7 +783,8 @@ vim.keymap.set("n", "<leader>jA", annotate.line, { desc = "JJ annotate line" })
           editor = {
             type = "buffer",
             keymaps = {
-              close = { "q", "<Esc>", "<C-c>" }, -- Enable <Esc> in the editor
+              close = { "<C-c>" },
+              save = { "q" },
             }
           }
         },

@@ -16,6 +16,7 @@ local split_module = require("jj.cmd.split")
 -- Config for cmd module
 --- @class jj.cmd.describe.editor.keymaps
 --- @field close? string|string[] Keymaps to close the editor buffer without saving
+--- @field save? string|string[] Keymaps to write and close the editor buffer
 
 --- @class jj.cmd.describe.editor
 --- @field type? "buffer"|"input" Editor mode for describe command: "buffer" (Git-style editor) or "input" (simple input prompt)
@@ -133,7 +134,8 @@ M.config = {
 		editor = {
 			type = "buffer",
 			keymaps = {
-				close = { "<C-c>", "q" },
+				close = { "<C-c>" },
+				save = { "q" },
 			},
 		},
 	},
@@ -803,6 +805,10 @@ function M.commit(description)
 		close = {
 			desc = "Close commit editor without saving",
 			handler = "<cmd>close!<CR>",
+		},
+		save = {
+			desc = "Write and close commit editor",
+			handler = "<cmd>wq<CR>",
 		},
 	})
 
