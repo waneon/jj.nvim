@@ -120,6 +120,7 @@ local split_module = require("jj.cmd.split")
 --- @field handler function|string
 --- @field modes string[]
 --- @field args? table
+--- @field opts? table
 
 --- @alias jj.cmd.keymap_specs table<string, jj.cmd.keymap_spec>
 
@@ -260,16 +261,14 @@ function M.resolve_keymaps_from_specs(cfg, specs)
 					spec.handler(unpack(spec.args))
 				end
 			end
+			local map_opts = vim.tbl_extend("force", { desc = spec.desc }, spec.opts or {})
 
 			if type(lhs) == "table" then
 				for _, key_lhs in ipairs(lhs) do
-					table.insert(
-						keymaps,
-						{ modes = spec.modes, lhs = key_lhs, rhs = handler, opts = { desc = spec.desc } }
-					)
+					table.insert(keymaps, { modes = spec.modes, lhs = key_lhs, rhs = handler, opts = map_opts })
 				end
 			else
-				table.insert(keymaps, { modes = spec.modes, lhs = lhs, rhs = handler, opts = { desc = spec.desc } })
+				table.insert(keymaps, { modes = spec.modes, lhs = lhs, rhs = handler, opts = map_opts })
 			end
 		end
 	end

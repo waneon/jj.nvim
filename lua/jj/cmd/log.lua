@@ -934,6 +934,7 @@ function M.log_keymaps()
 			desc = "Describe revision under cursor",
 			handler = M.handle_log_describe,
 			modes = { "n" },
+			opts = { nowait = true },
 		},
 		diff = {
 			desc = "Diff revision under cursor",
@@ -1016,6 +1017,7 @@ function M.log_keymaps()
 			desc = "Squash bookmark(s)",
 			handler = M.handle_log_squash,
 			modes = { "n", "v" },
+			opts = { nowait = true },
 		},
 		quick_squash = {
 			desc = "Squash the bookmark under the cursor into it's parent (-r) keeping parent's message (-u), alwas ignores immutability",
