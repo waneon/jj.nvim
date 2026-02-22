@@ -17,7 +17,8 @@ local default_describe_opts = {
 --- Execute jj describe command with the given description
 --- @param description string The description text
 --- @param revset? string The revision to describe
-local function execute_describe(description, revset)
+--- @param sync? boolean Whether to execute command synchronously
+local function execute_describe(description, revset, sync)
 	if not description or description == "" then
 		utils.notify("Description cannot be empty", vim.log.levels.ERROR)
 		return
@@ -30,6 +31,13 @@ local function execute_describe(description, revset)
 	cmd = cmd .. " --stdin"
 
 	-- Use --stdin to properly handle multi-line and special characters
+	if sync then
+		local _, success = runner.execute_command_sync(cmd, function()
+			utils.notify("Description set.", vim.log.levels.INFO)
+		end, "Failed to describe", description)
+		return success
+	end
+
 	runner.execute_command_async(cmd, function()
 		utils.notify("Description set.", vim.log.levels.INFO)
 	end, "Failed to describe", description)
@@ -58,10 +66,17 @@ function M.describe(description, revset, opts, on_close)
 		return
 	end
 
+	local sync = on_close ~= nil
+
 	-- Check if a description was provided otherwise require for input
 	if description then
 		-- Description provided directly
-		execute_describe(description, revset)
+		execute_describe(description, revset, sync)
+		if on_close then
+			vim.schedule(function()
+				on_close()
+			end)
+		end
 		return
 	end
 
@@ -89,7 +104,7 @@ function M.describe(description, revset, opts, on_close)
 				-- If nothing is provide simply exit
 				return
 			end
-			execute_describe(trimmed_description, revset)
+			execute_describe(trimmed_description, revset, sync)
 			-- Once editing is done, reopen the log if we came from there
 		end, function()
 			-- If an on close callback is provided, call it
@@ -112,7 +127,7 @@ function M.describe(description, revset, opts, on_close)
 		}, function(input)
 			-- If the user inputed something, execute the describe command
 			if input then
-				execute_describe(input, revset)
+				execute_describe(input, revset, sync)
 			end
 			-- Close the current terminal when finished
 			terminal.close_terminal_buffer()
