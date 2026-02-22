@@ -397,6 +397,8 @@ function M.handle_log_edit(ignore_immut, close_on_exit)
 
 	-- Try to execute cmd
 	runner.execute_command_async(cmd, function()
+		utils.reload_changed_file_buffers()
+
 		-- Close the terminal buffer
 		if close_on_exit then
 			utils.notify(string.format("Editing change: `%s`", revset), vim.log.levels.INFO)

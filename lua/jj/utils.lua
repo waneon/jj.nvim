@@ -425,4 +425,19 @@ function M.extract_description_from_describe(lines)
 	return trimmed_description
 end
 
+--- Reload changed on-disk files for all loaded, unmodified file buffers.
+--- Useful after commands like `jj edit` that move the working copy.
+function M.reload_changed_file_buffers()
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
+			local is_file_buffer = vim.bo[buf].buftype == ""
+			local is_named = vim.api.nvim_buf_get_name(buf) ~= ""
+			local is_unmodified = not vim.bo[buf].modified
+			if is_file_buffer and is_named and is_unmodified then
+				vim.cmd(string.format("silent! checktime %d", buf))
+			end
+		end
+	end
+end
+
 return M
